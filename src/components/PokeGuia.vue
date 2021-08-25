@@ -1,13 +1,13 @@
 <template>
 <div>
     <div class="searchBar">
-        <img class="cardLogo" src="../assets/svg/pokemon_logo.svg" alt="">
+        <a href=""><img class="cardLogo" src="../assets/svg/pokemon_logo.svg" alt=""></a>
         <input class="cardInput" v-model="searchInput" type="text" placeholder="¿Qué pokémon deseas buscar?">
         <button class="cardBtn" @click="search"><img src="../assets/svg/search_white_24dp.svg" alt="Botón de buscar"></button>
     </div>
     <ul id="foundResult" class="searchResult">
     <img src="../assets/img/testimg.png" alt="Foto de Pokemon" class="resultImg">
-        <li>{{}}</li>
+        <li></li>
     </ul>
 </div>
 </template>
@@ -21,17 +21,19 @@ export default {
         search() {
         fetch(`https://pokeapi.co/api/v2/pokemon/` + this.searchInput)
         .then(response => response.json())
-        .then(json => console.log(json))
+        .then(data => data)
         }
+    },
+    computed: {
+
     },
     created() {
         fetch('https://pokeapi.co/api/v2/pokemon/pikachu')
         .then(response => response.json())
-        .then(json => console.log(json))
+        .then(data => console.log(data))
     }
 }
 </script>
-
 
 <style scoped>
     .searchBar {
