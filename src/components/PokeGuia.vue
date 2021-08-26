@@ -6,8 +6,11 @@
         <button class="cardBtn" @click="search"><img src="../assets/svg/search_white_24dp.svg" alt="Botón de buscar"></button>
     </div>
     <ul id="foundResult" class="searchResult">
-    <img src="../assets/img/testimg.png" alt="Foto de Pokemon" class="resultImg">
-        <li></li>
+    <li><img alt="Foto de Pokemon" class="resultImg" v-bind:src="displayData[0].img"></li>
+        <li>{{displayData[0].name}}</li>
+        <li>Movimientos: {{displayData[0].moves}}</li>
+        <li>Habilidades: {{displayData[0].abilityOne.name}}</li>
+        <li>{{displayData[0].abilityTwo.name}}</li>
     </ul>
 </div>
 </template>
@@ -16,22 +19,35 @@
 export default {
     data: () => ({
         searchInput: '',
+        displayData: [],
+        pokemonData: []
     }),
     methods: {
         search() {
+        this.displayData.shift()
         fetch(`https://pokeapi.co/api/v2/pokemon/` + this.searchInput)
         .then(response => response.json())
-        .then(data => data)
+        .then((json) => (this.pokemonData = json))
+        console.log(this.pokemonData, this.pokemonData.moves[0][0].move.name)
+        this.displayData.push({
+            name: this.pokemonData.name,
+            img: this.pokemonData.sprites.front_default,
+            abilityOne: this.pokemonData.abilities[0].ability,
+            abilityTwo: this.pokemonData.abilities[1].ability,
+            moves: this.pokemonData.moves[0][0].move.name,
+        })
         }
     },
-    computed: {
-
-    },
     created() {
-        fetch('https://pokeapi.co/api/v2/pokemon/pikachu')
-        .then(response => response.json())
-        .then(data => console.log(data))
-    }
+        this.displayData.shift()
+        this.displayData.push({
+            name: "pikachu",
+            img: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
+            abilityOne: "static",
+            abilityTwo: "lightning-rod",
+            moves: "mega-punch",
+        })
+    },
 }
 </script>
 
@@ -96,6 +112,9 @@ export default {
         grid-template-areas: "img name"
                             "img info"
                             "img info";
+    }
+    .searchResult li {
+        list-style-type: none;
     }
     .resultImg {
         grid-area: img;
