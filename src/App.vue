@@ -1,18 +1,18 @@
 <template>
- <div id="app">
-   <DarkMode/>
- </div>
+  <div id="app">
+    <DarkMode />
+  </div>
 </template>
 
 <script>
-import DarkMode from './components/DarkMode'
+import DarkMode from "./components/DarkMode";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
     DarkMode,
-  }
-}
+  },
+};
 </script>
 
 <style>

@@ -1,5 +1,5 @@
 <template>
-  <PokeGuia class="container"/>
+  <PokeGuia class="container" />
 </template>
 
 <script>
