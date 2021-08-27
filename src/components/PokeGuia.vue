@@ -24,17 +24,17 @@ export default {
     }),
     methods: {
         search() {
-        this.displayData.shift()
-        fetch(`https://pokeapi.co/api/v2/pokemon/` + this.searchInput)
+            fetch(`https://pokeapi.co/api/v2/pokemon/` + this.searchInput)
         .then(response => response.json())
         .then((json) => (this.pokemonData = json))
         console.log(this.pokemonData, this.pokemonData.moves[0][0].move.name)
+        this.displayData.shift()
         this.displayData.push({
             name: this.pokemonData.name,
             img: this.pokemonData.sprites.front_default,
             abilityOne: this.pokemonData.abilities[0].ability,
             abilityTwo: this.pokemonData.abilities[1].ability,
-            moves: this.pokemonData.moves[0][0].move.name,
+            moves: this.pokemonData.moves,
         })
         }
     },
