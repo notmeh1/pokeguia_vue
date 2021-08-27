@@ -5,49 +5,63 @@
         <input class="cardInput" v-model="searchInput" type="text" placeholder="¿Qué pokémon deseas buscar?">
         <button class="cardBtn" @click="search"><img src="../assets/svg/search_white_24dp.svg" alt="Botón de buscar"></button>
     </div>
-    <ul id="foundResult" class="searchResult">
-    <li><img alt="Foto de Pokemon" class="resultImg" v-bind:src="displayData[0].img"></li>
-        <li>{{displayData[0].name}}</li>
-        <li>Movimientos: {{displayData[0].moves}}</li>
-        <li>Habilidades: {{displayData[0].abilityOne.name}}</li>
-        <li>{{displayData[0].abilityTwo.name}}</li>
-    </ul>
+    <div id="foundResult" class="searchResult">
+        <img class="pokeImg" :src="displayData[0].img" alt="Foto de Pokemon">
+        <h2 class="pokeName">{{displayData[0].name}}</h2>
+        <ul class="pokeMoves">
+            <h4>Movimientos</h4>
+            <li>{{displayData[0].moves[0].move.name}}</li>
+            <li>{{displayData[0].moves[1].move.name}}</li>
+        </ul>
+        <ul class="pokeAbilities">
+            <h4>Habilidades</h4>
+            <li>{{displayData[0].abiltiyOne}}</li>
+            <li>{{displayData[0].abiltiyTwo}}</li>
+        </ul>
+    </div>
 </div>
 </template>
 
 <script>
+import axios from 'axios'
 export default {
     data: () => ({
         searchInput: '',
+        pokemonData: null,
         displayData: [],
-        pokemonData: []
     }),
     methods: {
         search() {
-        this.displayData.shift()
-        fetch(`https://pokeapi.co/api/v2/pokemon/` + this.searchInput)
-        .then(response => response.json())
-        .then((json) => (this.pokemonData = json))
-        console.log(this.pokemonData, this.pokemonData.moves[0][0].move.name)
-        this.displayData.push({
-            name: this.pokemonData.name,
-            img: this.pokemonData.sprites.front_default,
-            abilityOne: this.pokemonData.abilities[0].ability,
-            abilityTwo: this.pokemonData.abilities[1].ability,
-            moves: this.pokemonData.moves[0][0].move.name,
-        })
+            this.displayData.shift()
+            axios
+            .get(`https://pokeapi.co/api/v2/pokemon/${this.searchInput}`)
+            .then((data) => {
+                this.pokemonData = data.data
+                this.displayData.push({
+                    img: this.pokemonData.sprites.front_default,
+                    name: this.pokemonData.name,
+                    moves: this.pokemonData.moves,
+                    abiltiyOne: this.pokemonData.abilities[0].ability.name,
+                    abiltiyTwo: this.pokemonData.abilities[1].ability.name,
+                })
+                console.log(this.pokemonData)
+            })
         }
     },
     created() {
-        this.displayData.shift()
-        this.displayData.push({
-            name: "pikachu",
-            img: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
-            abilityOne: "static",
-            abilityTwo: "lightning-rod",
-            moves: "mega-punch",
+        axios
+        .get(`https://pokeapi.co/api/v2/pokemon/pikachu`)
+        .then((data) => {
+            this.pokemonData = data.data
+            this.displayData.push({
+                    img: this.pokemonData.sprites.front_default,
+                    name: this.pokemonData.name,
+                    moves: this.pokemonData.moves,
+                    abiltiyOne: this.pokemonData.abilities[0].ability.name,
+                    abiltiyTwo: this.pokemonData.abilities[1].ability.name,
+            })
         })
-    },
+    }
 }
 </script>
 
@@ -107,23 +121,30 @@ export default {
         box-shadow: 7px 5px 14px 0px rgba(0,0,0,0.84);
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        grid-template-rows: repeat(3, 1fr);
-        grid-column-gap: 3em;
-        grid-template-areas: "img name"
-                            "img info"
-                            "img info";
+        grid-column-gap: 2em;
+        grid-template-rows: 1fr 2em 1fr 1fr;
+        grid-template-areas: "img img"
+                            "name name"
+                            "moves abilities"
+                            "moves abilities";
     }
-    .searchResult li {
-        list-style-type: none;
-    }
-    .resultImg {
+    .pokeImg {
+        display: block;
+        margin: 0 auto;
         grid-area: img;
         border-radius: 13em;
     }
-    .resultName {
+    .pokeName {
         grid-area: name;
+        text-align: center;
+        margin: 0;
     }
-    .resultInfo {
-        grid-area: info;
+    .pokeMoves {
+        grid-area: moves;
+        padding: 0;
+    }
+    .pokeAbilities {
+        grid-area: abilities;
+        padding: 0;
     }
 </style>
