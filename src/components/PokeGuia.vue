@@ -39,6 +39,10 @@ export default {
     pokemonData: null,
     displayData: [],
   }),
+  /** 
+   * Problema: La funcion trata de leer la propiedad antes de que sea definida.
+   * Causa error en consola, pero sigue renderizando la vista.
+  */
   methods: {
     search() {
       this.displayData.shift();
